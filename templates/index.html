@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .image-container {
+            display: block; /* 使用块级布局，让图片和文字在不同行显示 */
+            margin-bottom: 10px; /* 添加底部间距，让每个项目之间有一定的间隔 */
+        }
+        .image-container img {
+            max-width: 200px; /* 图片最大宽度为 200px */
+        }
+    </style>
+</head>
+<body>
+    <h1>二维码图床</h1>
+    <h3>图片会被保存24小时。</h3>
+    <h2>累计上传了 {{ usage_count }} 张图。</h2>
+    <a href="{{ url_for('upload') }}">上传一个二维码</a>
+    <ul>
+        {% for image in images %}
+            {% if image.expired %}
+                <li style="color: grey;">
+                    二维码名字：{{ image.title }} --- 上传时间：{{ image.creation_time }} --- 过期时间：{{ image.expiry_time }} (已过期)
+                    <!-- 显示图片 -->
+                </li>
+            {% else %}
+                <li>
+                    二维码名字：{{ image.title }} --- 上传时间：{{ image.creation_time }} --- 过期时间：{{ image.expiry_time }}
+                    <!-- 图片和文字分开展示 -->
+                    <div class="image-container">
+                        <span>图片：</span>
+                        <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
